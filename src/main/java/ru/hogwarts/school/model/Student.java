@@ -3,16 +3,15 @@ package ru.hogwarts.school.model;
 import java.util.Objects;
 
 public class Student {
-    private Long COUNT = 1L;
+
     private Long id;
     private String name;
     private int age;
 
     public Student(Long id, String name, int age) {
-        this.id = COUNT++;
+        this.id = id;
         this.name = name;
         this.age = age;
-//        Student student = new Student(id, name, age);
     }
 
     public Long getId() {
