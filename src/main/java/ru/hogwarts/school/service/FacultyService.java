@@ -1,9 +1,7 @@
 package ru.hogwarts.school.service;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,26 +19,32 @@ public class FacultyService {
         return faculty;
     }
 
-    public Faculty findFaculty(long id) {
-        return facultyMap.get(id);
+    public ResponseEntity<Faculty> findFaculty(long id) {
+        if (facultyMap.containsKey(id)) {
+            return ResponseEntity.ok(facultyMap.get(id));
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    public Faculty editFaculty(Faculty faculty) {
-        facultyMap.put(faculty.getId(), faculty);
-        return faculty;
+    public ResponseEntity<Faculty> editFaculty(Faculty faculty) {
+        if (facultyMap.containsKey(faculty.getId())) {
+            facultyMap.put(faculty.getId(), faculty);
+            return ResponseEntity.ok(faculty);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    public Faculty deleteFaculty(long id) {
-        return facultyMap.remove(id);
+    public ResponseEntity<Faculty> deleteFaculty(long id) {
+        if (facultyMap.containsKey(id)) {
+            return ResponseEntity.ok(facultyMap.remove(id));
+        }
+        return ResponseEntity.notFound().build();
     }
 
 
     public List<Faculty> findAllByColor(String color) {
-
-        List<Faculty> list = facultyMap.values().stream()
+        return facultyMap.values().stream()
                 .filter(a -> (a.getColor()).equals(color))
                 .collect(Collectors.toList());
-
-        return list;
     }
 }

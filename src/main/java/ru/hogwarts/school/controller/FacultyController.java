@@ -1,9 +1,8 @@
 package ru.hogwarts.school.controller;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
-
 import java.util.List;
 
 @RestController
@@ -16,8 +15,8 @@ public class FacultyController {
     }
 
     @GetMapping("{id}")
-    public Faculty findFaculty(@PathVariable int id) {
-        return facultyService.findFaculty(id);
+    public ResponseEntity<Faculty> findFaculty(@PathVariable int id) {
+       return facultyService.findFaculty(id);
     }
 
     @PostMapping
@@ -26,14 +25,15 @@ public class FacultyController {
     }
 
     @PutMapping
-    public Faculty editFaculty(Faculty faculty) {
-        return facultyService.editFaculty(faculty);
+    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
+       return facultyService.editFaculty(faculty);
+
     }
 
 
     @DeleteMapping("{id}")
-    public Faculty deleteFaculty(@PathVariable int id) {
-        return facultyService.deleteFaculty(id);
+    public ResponseEntity<Faculty> deleteFaculty(@PathVariable int id) {
+      return facultyService.deleteFaculty(id);
     }
 
 

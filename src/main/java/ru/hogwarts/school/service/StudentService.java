@@ -1,9 +1,7 @@
 package ru.hogwarts.school.service;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,26 +18,32 @@ public class StudentService {
         studentMap.put(COUNT,student);
         return student;
     }
-    public Student findStudent(long id) {
-        return studentMap.get(id);
+    public ResponseEntity<Student> findStudent(long id) {
+        if (studentMap.containsKey(id)) {
+            return ResponseEntity.ok(studentMap.get(id));
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
-    public Student editStudent(Student student) {
-        studentMap.put(student.getId(),student);
-        return student;
+    public ResponseEntity<Student> editStudent(Student student) {
+        if (studentMap.containsKey(student.getId())) {
+            return ResponseEntity.ok(studentMap.put(student.getId(),student));
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    public Student deleteStudent(long id) {
-        return studentMap.remove(id);
+    public ResponseEntity<Student> deleteStudent(long id) {
+        if (studentMap.containsKey(id)) {
+            return ResponseEntity.ok(studentMap.remove(id));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public List<Student> findStudentByAge(int age) {
-
-
-        List<Student> list = studentMap.values().stream()
+        return studentMap.values().stream()
                 .filter(student -> student.getAge() == age)
                 .collect(Collectors.toList());
-        return list;
 
     }
 }
