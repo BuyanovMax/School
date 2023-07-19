@@ -12,7 +12,9 @@ import ru.hogwarts.school.exception.BadRequestException;
 import ru.hogwarts.school.exception.NotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.ArrayList;
@@ -28,10 +30,14 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
     @Mock
+    private FacultyRepository facultyRepository;
+    @Mock
     private StudentRepository studentRepository;
+
+    @InjectMocks
+    private FacultyService facultyService;
     @InjectMocks
     private StudentService studentService;
-
     @BeforeEach
     public void beforeEach() {
         studentService = new StudentService(studentRepository);
@@ -118,5 +124,60 @@ public class StudentServiceTest {
         List<Student> actual = studentService.findStudentByAge(2);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void findAllByAgeBetween() {
+        Mockito.when(studentRepository.save(new Student(1L, "Name", 1))).thenReturn(new Student(1L, "Name", 1));
+        Mockito.when(studentRepository.save(new Student(2L, "Name1", 2))).thenReturn(new Student(2L, "Name1", 2));
+        Mockito.when(studentRepository.save(new Student(3L, "Name2", 2))).thenReturn(new Student(3L, "Name2", 2));
+        Mockito.when(studentRepository.save(new Student(4L, "Name3", 4))).thenReturn(new Student(4L, "Name3", 4));
+
+        Student student = studentService.createStudent(new Student(1L, "Name", 1));
+        Student student1 = studentService.createStudent(new Student(2L, "Name1", 2));
+        Student student2 = studentService.createStudent(new Student(3L, "Name2", 2));
+        Student student3 = studentService.createStudent(new Student(4L, "Name3", 4));
+
+
+        List<Student> expected = new ArrayList<>();
+        expected.add(student1);
+        expected.add(student2);
+        expected.add(student3);
+
+        Mockito.when(studentRepository.findAllByAgeBetween(2,4)).thenReturn(expected);
+
+        List<Student> actual = studentService.findAllByAgeBetween(2,4);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findStudentByFaculty() {
+        Mockito.when(studentRepository.save(new Student(1L, "Name", 1))).thenReturn(new Student(1L, "Name", 1));
+        Mockito.when(studentRepository.save(new Student(2L, "Name1", 2))).thenReturn(new Student(2L, "Name1", 2));
+        Mockito.when(studentRepository.save(new Student(3L, "Name2", 2))).thenReturn(new Student(3L, "Name2", 2));
+
+
+        Student student = studentService.createStudent(new Student(1L, "Name", 1));
+        Student student1 = studentService.createStudent(new Student(2L, "Name1", 2));
+        Student student2 = studentService.createStudent(new Student(3L, "Name2", 2));
+
+
+        List<Student> expected = new ArrayList<>();
+        expected.add(student);
+        expected.add(student1);
+        expected.add(student2);
+
+        Mockito.when(facultyRepository.save(new Faculty(1L, "Name", "Color"))).thenReturn(new Faculty(1L, "Name", "Color"));
+
+        Faculty faculty = facultyService.createFaculty(new Faculty(1L, "Name", "Color"));
+
+
+        Mockito.when(studentRepository.findStudentByFaculty(faculty)).thenReturn(expected);
+
+        List<Student> actual = studentService.findStudentByFaculty(faculty);
+
+        assertEquals(expected,actual);
+
     }
 }

@@ -3,6 +3,7 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.BadRequestException;
 import ru.hogwarts.school.exception.NotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
@@ -16,8 +17,6 @@ import java.util.stream.Collectors;
 public class StudentService {
     private final StudentRepository studentRepository;
 
-//    private final Map<Long, Student> studentMap = new HashMap<>();
-//    private Long COUNT = 0L;
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -29,7 +28,6 @@ public class StudentService {
 
     public Optional<Student> findStudent(Long id) {
         return studentRepository.findById(id);
-
     }
 
     public Student editStudent(Student student) {
@@ -38,11 +36,17 @@ public class StudentService {
 
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
-
     }
 
     public List<Student> findStudentByAge(Integer age) {
         return studentRepository.findByAge(age);
+    }
 
+    public List<Student> findAllByAgeBetween(int min, int max) {
+        return studentRepository.findAllByAgeBetween(min, max);
+    }
+
+    public List<Student> findStudentByFaculty(Faculty faculty) {
+        return studentRepository.findStudentByFaculty(faculty);
     }
 }

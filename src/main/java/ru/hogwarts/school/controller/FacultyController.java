@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.exception.NotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.List;
@@ -54,14 +55,6 @@ public class FacultyController {
 
     @DeleteMapping("{id}")
     public void deleteFaculty(@PathVariable Long id) {
-//        try {
-//            if (id != null) {
-//                return ResponseEntity.ok(facultyService.deleteFaculty(id));
-//            }
-//        } catch (NotFoundException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         facultyService.deleteFaculty(id);
     }
 
@@ -70,6 +63,19 @@ public class FacultyController {
     public ResponseEntity<List<Faculty>> getAllFacultyByColor(String color) {
         if (color != null) {
             return ResponseEntity.ok(facultyService.findAllByColor(color));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Faculty>> findFacultyByNameOrColor(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
+            return ResponseEntity.ok(facultyService.findFacultyByNameOrColor(name, color));
+    }
+
+    @GetMapping("/facultyByStudent")
+    public ResponseEntity<Faculty> findFacultyByStudent(Student student) {
+        if (student != null) {
+            return ResponseEntity.ok(facultyService.findFacultyByStudent(student));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

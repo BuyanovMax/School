@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.exception.NotFoundException;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -17,12 +18,13 @@ public class StudentController {
 
     private final StudentService studentService;
 
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Student> createFaculty(@RequestBody Student student) {
         if (student != null) {
             return ResponseEntity.ok(studentService.createStudent(student));
@@ -58,14 +60,6 @@ public class StudentController {
 
     @DeleteMapping("{id}")
     public void deleteFaculty(@PathVariable Long id) {
-//        try {
-//            if (id != 0) {
-//                return ResponseEntity.ok(studentService.deleteStudent(id));
-//            }
-//        } catch (NotFoundException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         studentService.deleteStudent(id);
     }
 
@@ -76,5 +70,23 @@ public class StudentController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    @GetMapping
+    public ResponseEntity<List<Student>> findAllByAgeBetween(Integer min, Integer max) {
+        if (min != null || max != null) {
+            return ResponseEntity.ok(studentService.findAllByAgeBetween(min, max));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @GetMapping("/StudentByFaculty")
+    public ResponseEntity<List<Student>> findStudentByFaculty(Faculty faculty) {
+        if (faculty != null) {
+            return ResponseEntity.ok(studentService.findStudentByFaculty(faculty));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+
 
 }
