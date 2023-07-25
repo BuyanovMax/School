@@ -73,7 +73,7 @@ public class FacultyController {
     }
 
     @GetMapping("/facultyByStudent")
-    public ResponseEntity<Faculty> findFacultyByStudent(Student student) {
+    public ResponseEntity<Faculty> findFacultyByStudent(@RequestBody Student student) {
         if (student != null) {
             return ResponseEntity.ok(facultyService.findFacultyByStudent(student));
         }
