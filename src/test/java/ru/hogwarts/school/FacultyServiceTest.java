@@ -106,7 +106,7 @@ public class FacultyServiceTest {
         expected.add(faculty1);
         expected.add(faculty3);
 
-        Mockito.when(facultyRepository.findByColor("Color1")).thenReturn(expected);
+        Mockito.when(facultyRepository.findAllByColor("Color1")).thenReturn(expected);
 
         List<Faculty> actual = facultyService.findAllByColor("Color1");
 
