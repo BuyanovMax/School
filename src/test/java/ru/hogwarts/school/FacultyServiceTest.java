@@ -1,6 +1,5 @@
 package ru.hogwarts.school;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,9 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import ru.hogwarts.school.exception.BadRequestException;
-import ru.hogwarts.school.exception.NotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
@@ -21,7 +17,6 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,10 +52,6 @@ public class FacultyServiceTest {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    public void createFacultyNegativeTest() {
-//        assertThrows(BadRequestException.class, () -> facultyService.findFaculty(null));
-//    }
 
     @Test
     public void findFacultyTest() {
@@ -138,7 +129,7 @@ public class FacultyServiceTest {
         expected.add(faculty1);
         expected.add(faculty3);
 
-        Mockito.when(facultyRepository.findByNameOrColorContainsIgnoreCase(null,"Color")).thenReturn(expected);
+        Mockito.when(facultyRepository.findAllByNameOrColorIgnoreCase(null,"Color")).thenReturn(expected);
 
         List<Faculty> actual = facultyService.findFacultyByNameOrColor(null, "Color");
 
@@ -154,9 +145,9 @@ public class FacultyServiceTest {
 
         Student student = studentService.createStudent(new Student(1L, "Вася", 9));
 
-        Mockito.when(facultyRepository.findFacultyByStudent(student)).thenReturn(faculty);
+        Mockito.when(facultyRepository.findByStudent_id(student.getId())).thenReturn(faculty);
 
-        Faculty actual = facultyService.findFacultyByStudent(student);
+        Faculty actual = facultyService.findFacultyByStudent(student.getId());
 
         assertEquals(faculty,actual);
 

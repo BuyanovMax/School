@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("faculty")
+@RequestMapping("/faculty")
 public class FacultyController {
+
     private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
+
 
     @GetMapping("{id}")
     public ResponseEntity<Optional<Faculty>> findFaculty(@PathVariable Long id) {
@@ -59,7 +61,7 @@ public class FacultyController {
     }
 
 
-    @GetMapping("/getAllFacultyByCalor/{id}")
+    @GetMapping("/getAllFacultyByColor/")
     public ResponseEntity<List<Faculty>> getAllFacultyByColor(String color) {
         if (color != null) {
             return ResponseEntity.ok(facultyService.findAllByColor(color));
@@ -73,11 +75,10 @@ public class FacultyController {
     }
 
     @GetMapping("/facultyByStudent")
-    public ResponseEntity<Faculty> findFacultyByStudent(@RequestBody Student student) {
-        if (student != null) {
-            return ResponseEntity.ok(facultyService.findFacultyByStudent(student));
+    public ResponseEntity<Faculty> findFacultyByStudent(@RequestParam Long id) {
+        if (id != null) {
+            return ResponseEntity.ok(facultyService.findFacultyByStudent(id));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
 }

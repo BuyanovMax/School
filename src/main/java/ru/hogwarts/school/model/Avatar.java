@@ -10,7 +10,7 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String filePath;
-    private Long longSize;
+    private java.lang.Long longSize;
     private String mediaType;
     private byte[] data;
     @OneToOne
@@ -19,20 +19,12 @@ public class Avatar {
     public Avatar() {
     }
 
-    public Avatar(Long id, String filePath, Long longSize, String mediaType, byte[] data, Student student) {
-        this.id = id;
-        this.filePath = filePath;
-        this.longSize = longSize;
-        this.mediaType = mediaType;
-        this.data = data;
-        this.student = student;
-    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(java.lang.Long id) {
         this.id = id;
     }
 
@@ -99,7 +91,6 @@ public class Avatar {
                ", longSize=" + longSize +
                ", mediaType='" + mediaType + '\'' +
                ", data=" + Arrays.toString(data) +
-               ", student=" + student +
                '}';
     }
 }

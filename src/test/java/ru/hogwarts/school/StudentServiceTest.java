@@ -7,20 +7,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.AvatarRepository;
 import ru.hogwarts.school.repositories.FacultyRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -30,6 +28,8 @@ public class StudentServiceTest {
     private FacultyRepository facultyRepository;
     @Mock
     private StudentRepository studentRepository;
+    @Mock
+    private AvatarRepository avatarRepository;
 
     @InjectMocks
     private FacultyService facultyService;
@@ -90,8 +90,6 @@ public class StudentServiceTest {
                 .thenReturn(new Student(1L, "Name", 1));
 
         studentService.createStudent(new Student(1L, "Name", 1));
-
-        Student expected = new Student(1L, "Name", 1);
 
         studentService.deleteStudent(1L);
 
@@ -170,9 +168,26 @@ public class StudentServiceTest {
         Faculty faculty = facultyService.createFaculty(new Faculty(1L, "Name", "Color"));
 
 
-        Mockito.when(studentRepository.findStudentByFaculty(faculty)).thenReturn(expected);
+        Mockito.when(studentRepository.findAllByFaculty_id(faculty.getId())).thenReturn(expected);
 
-        List<Student> actual = studentService.findStudentByFaculty(faculty);
+        List<Student> actual = studentService.findAllStudensByFaculty(faculty.getId());
+
+        assertEquals(expected,actual);
+
+    }
+
+
+
+    @Test
+    void findAvatarTest() {
+        Mockito.when(avatarRepository.findByStudentId(1L))
+                .thenReturn(Optional.of(new Avatar()));
+
+        Student student = studentService.createStudent(new Student(1L, "Name", 1));
+
+        Optional<Avatar> expected = Optional.of(new Avatar());
+
+        Optional<Avatar> actual = avatarRepository.findByStudentId(1L);
 
         assertEquals(expected,actual);
 

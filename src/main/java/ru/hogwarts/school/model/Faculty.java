@@ -1,10 +1,9 @@
 package ru.hogwarts.school.model;
 
-import ru.hogwarts.school.service.FacultyService;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 public class Faculty {
@@ -14,8 +13,10 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
+
     @OneToMany(mappedBy = "faculty")
-   private List<Student> student;
+    private List<Student> student;
+
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
@@ -23,17 +24,22 @@ public class Faculty {
         this.color = color;
     }
 
+    public Faculty(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
+
     public Faculty() {
-
     }
 
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -51,6 +57,7 @@ public class Faculty {
     public void setColor(String color) {
         this.color = color;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -73,6 +80,4 @@ public class Faculty {
                ", color='" + color + '\'' +
                '}';
     }
-
-
 }
