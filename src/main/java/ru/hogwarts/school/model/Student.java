@@ -1,18 +1,34 @@
 package ru.hogwarts.school.model;
 
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
 public class Student {
-    private Long COUNT = 1L;
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String name;
     private int age;
 
-    public Student(Long id, String name, int age) {
-        this.id = COUNT++;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+
+
+    public Student(String name, int age) {
         this.name = name;
         this.age = age;
-//        Student student = new Student(id, name, age);
+    }
+
+    public Student(Long id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    public Student() {
     }
 
     public Long getId() {
@@ -41,7 +57,6 @@ public class Student {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
