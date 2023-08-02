@@ -15,8 +15,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findAllByAgeBetween(int min, int max);
 
     List<Student> findAllByFaculty_id(Long id);
-    @Query(value = "select s from Student s where s.faculty.id = :id")
-    List<Student> findStudentsByFacultyId(long id);
+//    @Query(value = "select s from Student s where s.faculty.id = :id")
+//    List<Student> findStudentsByFacultyId(long id);
     @Query(value = "select id from student order by id desc limit 1;",nativeQuery = true)
     Long findLastID();
 
