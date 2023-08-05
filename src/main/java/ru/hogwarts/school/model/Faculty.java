@@ -17,6 +17,12 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty")
     private List<Student> student;
 
+    public Faculty(Long id, String name, String color, List<Student> student) {
+        this.id = id;
+        this.name = name;
+        this.color = color;
+        this.student = student;
+    }
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
@@ -58,6 +64,9 @@ public class Faculty {
         this.color = color;
     }
 
+    public void setStudent(List<Student> student) {
+        this.student = student;
+    }
 
     @Override
     public boolean equals(Object o) {

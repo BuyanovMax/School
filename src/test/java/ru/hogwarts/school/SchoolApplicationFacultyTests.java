@@ -3,7 +3,11 @@ package ru.hogwarts.school;
 
 import com.google.gson.Gson;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -13,6 +17,9 @@ import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.AvatarRepository;
+import ru.hogwarts.school.repositories.FacultyRepository;
+import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
@@ -21,6 +28,9 @@ import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SchoolApplicationFacultyTests {
@@ -37,13 +47,21 @@ class SchoolApplicationFacultyTests {
     private AvatarService avatarService;
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private FacultyRepository facultyRepository;
+
+
+    @BeforeEach
+    void init() {
+
+    }
 
     @Test
     void contextLoadsFaculty() throws Exception {
         assertThat(facultyController).isNotNull();
     }
-
-
 
     @Test
     void contextLoadsAvatar() throws Exception {
@@ -60,28 +78,24 @@ class SchoolApplicationFacultyTests {
 
     @Test
     void createFaculty() throws Exception {
-        Faculty faculty = new Faculty();
-        faculty.setName("Хогвардс");
-        faculty.setColor("Разноцветный");
+        Faculty faculty = new Faculty("Хогвардс","Разноцветный");
 
         Assertions
                 .assertThat(this.testRestTemplate.postForObject("http://localhost:" + port + "/faculty", faculty, String.class))
                 .isNotNull();
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/1");
+        Long lastID = facultyRepository.findLastID();
+        testRestTemplate.delete("http://localhost:" + port + "/faculty/"+lastID);
     }
 
 
     @Test
     void editFacultyTest() throws Exception {
 
-        Faculty faculty = new Faculty();
-        faculty.setName("Хогвардс");
-        faculty.setColor("Разноцветный");
-        java.lang.Long lastId = facultyService.findLastID();
-        Faculty faculty2 = new Faculty();
-        faculty2.setId(lastId);
-        faculty2.setName("Школа");
-        faculty2.setColor("Зеленая");
+        Faculty faculty = new Faculty("Хогвардс", "Разноцветный");
+        Faculty facultyCreate = facultyService.createFaculty(faculty);
+        Long lastId = facultyService.findLastID();
+
+        Faculty faculty2 = new Faculty(lastId, "Школа", "Зеленая");
 
         Optional<Faculty> expected = facultyService.findFaculty(lastId);
 
@@ -89,7 +103,7 @@ class SchoolApplicationFacultyTests {
 
         Optional<Faculty> actual = facultyService.findFaculty(lastId);
         Assertions.assertThat(!expected.equals(actual));
-        testRestTemplate.put("http://localhost:" + port + "/faculty/", faculty);
+        testRestTemplate.put("http://localhost:" + port + "/faculty/", facultyCreate);
 
     }
 
@@ -97,15 +111,13 @@ class SchoolApplicationFacultyTests {
     @Test
     public void deleteFacultyTest() throws Exception {
 
-        Faculty faculty = new Faculty();
-        faculty.setName("Хогвардс");
-        faculty.setColor("Разноцветный");
+        Faculty faculty = new Faculty("Хогвардс", "Разноцветный");
 
         testRestTemplate.postForObject("http://localhost:" + port + "/faculty", faculty, String.class);
-        java.lang.Long lastId = facultyService.findLastID();
+        Long lastId = facultyService.findLastID();
         testRestTemplate.getForObject("http://localhost:" + port + "/faculty" + lastId, String.class);
         Optional<Faculty> lastFaculty = facultyService.findFaculty(lastId);
-        java.lang.Long id = lastFaculty.get().getId();
+        Long id = lastFaculty.get().getId();
 
         testRestTemplate.delete("http://localhost:" + port + "/faculty/" + lastId);
         Optional<Faculty> lastFaculty2 = facultyService.findFaculty(id);
@@ -116,77 +128,68 @@ class SchoolApplicationFacultyTests {
     @Test
     void getAllFacultyByColorTest() throws Exception {
 
-        Faculty faculty = new Faculty();
-        faculty.setId(2L);
-        faculty.setName("string");
-        faculty.setColor("string");
-        Faculty faculty2 = new Faculty();
-        faculty2.setId(3L);
-        faculty2.setName("string");
-        faculty2.setColor("string");
-
+        Faculty faculty = new Faculty("string", "string");
+        Faculty faculty2 = new Faculty("string", "string");
+        Faculty faculty3 = facultyService.createFaculty(faculty);
+        Faculty faculty1 = facultyService.createFaculty(faculty2);
         List<Faculty> list = new ArrayList<>();
         list.add(faculty);
         list.add(faculty2);
         String json = new Gson().toJson(list);
-        String color = "string";
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port
-                                                         + "/faculty/getAllFacultyByColor/?color=string", String.class);
+                + "/faculty/getAllFacultyByColor/?color=string", String.class);
         System.out.println(forObject);
-
-        assertThat(forObject.equals(json));
+        assertThat(forObject.equals(json)).isTrue();
+        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty3.getId());
+        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty1.getId());
 
     }
 
     @Test
     void findFacultyByNameOrColorTest() throws Exception {
 
-        Faculty faculty = new Faculty();
-        faculty.setId(2L);
-        faculty.setName("string");
-        faculty.setColor("string");
-        Faculty faculty2 = new Faculty();
-        faculty2.setId(3L);
-        faculty2.setName("string");
-        faculty2.setColor("string");
-        Faculty faculty3 = new Faculty();
-        faculty3.setId(4L);
-        faculty3.setName("string");
-        faculty3.setColor("string2");
-        Faculty faculty4 = new Faculty();
-        faculty4.setId(5L);
-        faculty4.setName("string");
-        faculty4.setColor("string2");
+        Faculty faculty = new Faculty("123", "string");
+        Faculty faculty2 = new Faculty("234", "string");
+        Faculty faculty1 = facultyService.createFaculty(faculty);
+        Faculty faculty3 = facultyService.createFaculty(faculty2);
 
         List<Faculty> list = new ArrayList<>();
-        list.add(faculty);
-        list.add(faculty2);
+        list.add(faculty1);
         list.add(faculty3);
-        list.add(faculty4);
-
-
         String json = new Gson().toJson(list);
+
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty?name=string&color=string", String.class);
         assertEquals(forObject, json);
-
-
+        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty1.getId());
+        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty3.getId());
     }
 
     @Test
-    void findStudentByFacultyTest() {
-        Student student = new Student();
-        student.setId(7L);
-        student.setName("Олег");
-        student.setAge(8);
+    void findFacultyByStudentTest() {
+        Faculty byStudentId = facultyRepository.findByStudent_id(1L);
+        System.out.println(byStudentId);
+        Faculty faculty = new Faculty(1L, "string", "color");
+        facultyService.createFaculty(faculty);
+        Long lastID = facultyRepository.findLastID();
+        faculty.setId(lastID);
 
-        List<Student> list = new ArrayList<>();
-        list.add(student);
-        String json = new Gson().toJson(list);
 
-        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/StudentByFaculty/?id=9", String.class);
-        assertEquals(forObject,json);
+        Student student = new Student("Олег", 8, faculty);
+
+        Student save = studentRepository.save(student);
+
+
+
+        Faculty faculty1 = new Faculty(9L, "string", "color");
+
+        String json4 = new Gson().toJson(faculty1);
+
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty/facultyByStudent/?id=11", String.class);
+        assertEquals(forObject, json4);
+
+        testRestTemplate.delete("http://localhost:" + port + "/student/" + save.getId());
     }
 
 

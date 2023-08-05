@@ -17,6 +17,17 @@ public class Student {
     private Faculty faculty;
 
 
+    public Student(Long id, String name, int age, Faculty faculty) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.faculty = faculty;
+    }
+    public Student( String name, int age, Faculty faculty) {
+        this.name = name;
+        this.age = age;
+        this.faculty = faculty;
+    }
     public Student(String name, int age) {
         this.name = name;
         this.age = age;
@@ -53,6 +64,10 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class StudentService {
     }
 
 
-    public java.lang.Long findLastID() {
+    public Long findLastID() {
         return studentRepository.findLastID();
     }
 }

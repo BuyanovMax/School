@@ -2,6 +2,9 @@ package ru.hogwarts.school;
 
 import com.google.gson.Gson;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +15,8 @@ import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repositories.FacultyRepository;
+import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
@@ -38,11 +43,19 @@ public class SchoolApplicationStudentTests {
     private AvatarService avatarService;
     @Autowired
     private TestRestTemplate testRestTemplate;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private FacultyService facultyService;
+    @Autowired
+    private FacultyRepository facultyRepository;
+
 
 
 
     @Test
     void contextLoadsStudent() throws Exception {
+
         assertThat(studentController).isNotNull();
     }
 
@@ -54,43 +67,43 @@ public class SchoolApplicationStudentTests {
 
     @Test
     void findStudent() throws Exception {
+        Student student = new Student("Вася", 9);
+        studentRepository.save(student);
         Assertions
                 .assertThat(this.testRestTemplate.getForObject("http://localhost:" + port + "/student/1", String.class))
                 .isNotNull();
+        studentRepository.delete(student);
     }
 
     @Test
     void createStudent() throws Exception {
-        Student student = new Student();
-        student.setName("Петруха");
-        student.setAge(45);
-
+        Student student = new Student(1L, "Вася", 9);
+        String actual = testRestTemplate.postForObject("http://localhost:" + port + "/student", student, String.class);
         Assertions
-                .assertThat(this.testRestTemplate.postForObject("http://localhost:" + port + "/student", student, String.class))
+                .assertThat(actual)
                 .isNotNull();
-        testRestTemplate.delete("http://localhost:" + port + "/student/1");
-
+        Optional<Student> student1 = studentService.findStudent(1L);
+        studentRepository.delete( student);
     }
 
     @Test
     void editStudentTest() throws Exception {
-
-        Student student = new Student();
-        student.setName("Петруха");
-        student.setAge(45);
-        java.lang.Long lastId = studentService.findLastID();
-        Student student2 = new Student();
-        student2.setId(lastId);
-        student2.setName("Васечка");
-        student2.setAge(16);
-
+        Student student2 = new Student("Пётр", 16);
+        Student student3 = new Student("Вася", 18);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        Long lastId = studentRepository.findLastID();
         Optional<Student> expected = studentService.findStudent(lastId);
-
+        student2.setId(lastId);
         testRestTemplate.put("http://localhost:" + port + "/student/", student2);
-
+        lastId = studentRepository.findLastID();
         Optional<Student> actual = studentService.findStudent(lastId);
-        Assertions.assertThat(!expected.equals(actual));
-        testRestTemplate.put("http://localhost:" + port + "/student/", student);
+        Assertions.assertThat(!expected.equals(actual)).isTrue();
+        testRestTemplate.put("http://localhost:" + port + "/student/", expected);
+
+        studentRepository.delete(student2);
+        studentRepository.delete(student3);
+
 
     }
 
@@ -98,15 +111,13 @@ public class SchoolApplicationStudentTests {
     @Test
     public void deleteStudentTest() throws Exception {
 
-        Student student = new Student();
-        student.setName("Петруха");
-        student.setAge(45);
+        Student student = new Student(1L, "Петруха", 45);
 
         testRestTemplate.postForObject("http://localhost:" + port + "/student", student, String.class);
-        java.lang.Long lastId = studentService.findLastID();
+        Long lastId = studentService.findLastID();
         testRestTemplate.getForObject("http://localhost:" + port + "/student" + lastId, String.class);
         Optional<Student> lastStudent = studentService.findStudent(lastId);
-        java.lang.Long id = lastStudent.get().getId();
+        Long id = lastStudent.get().getId();
 
         testRestTemplate.delete("http://localhost:" + port + "/student/" + lastId);
         Optional<Student> lastFaculty2 = studentService.findStudent(id);
@@ -116,40 +127,69 @@ public class SchoolApplicationStudentTests {
 
     @Test
     void findStudentByAgeTest() throws Exception {
-        Student student = new Student();
-        student.setId(3L);
-        student.setName("Вася");
-        student.setAge(3);
+        Student student = new Student( "Вася", 3);
+        Student save = studentRepository.save(student);
         List<Student> list = new ArrayList<>();
-        list.add(student);
+        list.add(save);
 
         String json = new Gson().toJson(list);
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/findAllByAge/?age=3", String.class);
 
-        assertEquals(forObject,json);
+        assertEquals(forObject, json);
+        studentRepository.delete(save);
     }
 
     @Test
-    void findAllByAgeBetweenTest() throws Exception{
+    void findAllByAgeBetweenTest() throws Exception {
 
         List<Student> list = new ArrayList<>();
-        Student student = new Student();
-        student.setId(5L);
-        student.setName("Алена");
-        student.setAge(2);
-        Student student2 = new Student();
-        student2.setId(3L);
-        student2.setName("Вася");
-        student2.setAge(3);
+        Student student = new Student( "Васечка", 16);
+        Student student2 = new Student( "Петруха", 45);
         list.add(student);
         list.add(student2);
+        studentRepository.save(student);
+        studentRepository.save(student2);
 
         String json = new Gson().toJson(list);
 
-        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student?min=2&max=4", String.class);
-        assertEquals(forObject,json);
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student?min=15&max=45", String.class);
+        assertEquals(forObject, json);
+        studentRepository.delete(student);
+        studentRepository.delete(student2);
 
     }
+    @Test
+    void findAllStudentsByFacultyTest() {
+        Faculty faculty = new Faculty( 1L,"string", "color");
+        facultyService.createFaculty(faculty);
+        Long lastID = facultyRepository.findLastID();
+        faculty.setId(lastID);
+
+        Student student = new Student( "Олег", 8,faculty);
+        Student student2 = new Student("Петя", 12, faculty);
+        List<Student> list2 = new ArrayList<>();
+        list2.add(student);
+        list2.add(student2);
+
+        Student save = studentRepository.save(student);
+        Student save1 = studentRepository.save(student2);
+
+
+        Student student1 = new Student(save.getId(), "Олег", 8);
+        Student student3 = new Student(save1.getId(), "Петя", 12);
+        List<Student> list3 = new ArrayList<>();
+        list3.add(student1);
+        list3.add(student3);
+        String json4 = new Gson().toJson(list3);
+
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/StudentByFaculty/?id=1", String.class);
+        assertEquals(forObject, json4);
+
+        studentRepository.delete(student);
+        studentRepository.delete(student2);
+        facultyRepository.delete(faculty);
+    }
+
 
 }
