@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("avatar")
@@ -31,7 +33,7 @@ public class AvatarController {
 
     @PostMapping(value = "/{studentId}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(@PathVariable Long studentId, @RequestParam MultipartFile avatar) throws IOException {
-        if (avatar.getSize() > 1024 * 300) {
+        if (avatar.getSize() > 1024 * 900) {
             return ResponseEntity.badRequest().body("File is too big");
         }
 
@@ -60,6 +62,12 @@ public class AvatarController {
             response.setContentLength((int) avatar.getLongSize());
             inputStream.transferTo(outputStream);
         }
+    }
+
+    @GetMapping("/findAllAvatarsByPages")
+    public List<Avatar> findAllAvatarsByPages(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
+
+        return avatarService.findAllAvatarsByPages(pageNumber,pageSize);
     }
 
 }

@@ -52,4 +52,19 @@ public class StudentService {
     public Long findLastID() {
         return studentRepository.findLastID();
     }
+
+
+
+    public Integer findAllStudentCount() {
+        return studentRepository.findAllStudentCount();
+    }
+
+    public Double findAllStudentAgeAverage() {
+        return studentRepository.findAllStudentAgeAverage();
+    }
+
+    public List<Student> findFiveLastStudent() {
+        return studentRepository.findFiveLastStudent();
+    }
+
 }
