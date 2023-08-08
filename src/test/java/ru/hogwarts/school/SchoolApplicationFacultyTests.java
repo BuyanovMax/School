@@ -56,6 +56,9 @@ class SchoolApplicationFacultyTests {
     @BeforeEach
     void init() {
 
+        studentRepository.deleteAll();
+        facultyRepository.deleteAll();
+
     }
 
     @Test
@@ -84,7 +87,7 @@ class SchoolApplicationFacultyTests {
                 .assertThat(this.testRestTemplate.postForObject("http://localhost:" + port + "/faculty", faculty, String.class))
                 .isNotNull();
         Long lastID = facultyRepository.findLastID();
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/"+lastID);
+
     }
 
 
@@ -103,7 +106,7 @@ class SchoolApplicationFacultyTests {
 
         Optional<Faculty> actual = facultyService.findFaculty(lastId);
         Assertions.assertThat(!expected.equals(actual));
-        testRestTemplate.put("http://localhost:" + port + "/faculty/", facultyCreate);
+
 
     }
 
@@ -141,8 +144,7 @@ class SchoolApplicationFacultyTests {
                 + "/faculty/getAllFacultyByColor/?color=string", String.class);
         System.out.println(forObject);
         assertThat(forObject.equals(json)).isTrue();
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty3.getId());
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty1.getId());
+
 
     }
 
@@ -162,35 +164,25 @@ class SchoolApplicationFacultyTests {
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty?name=string&color=string", String.class);
         assertEquals(forObject, json);
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty1.getId());
-        testRestTemplate.delete("http://localhost:" + port + "/faculty/" + faculty3.getId());
+
     }
 
     @Test
     void findFacultyByStudentTest() {
-        Faculty byStudentId = facultyRepository.findByStudent_id(1L);
-        System.out.println(byStudentId);
-        Faculty faculty = new Faculty(1L, "string", "color");
-        facultyService.createFaculty(faculty);
-        Long lastID = facultyRepository.findLastID();
-        faculty.setId(lastID);
-
+        Faculty faculty = new Faculty( "string", "color");
+        Faculty save = facultyRepository.save(faculty);
 
         Student student = new Student("Олег", 8, faculty);
-
-        Student save = studentRepository.save(student);
-
-
+        Student save1 = studentRepository.save(student);
 
         Faculty faculty1 = new Faculty(9L, "string", "color");
-
         String json4 = new Gson().toJson(faculty1);
 
-        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty/facultyByStudent/?id=11", String.class);
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty/facultyByStudent/?id=28", String.class);
+
         assertEquals(forObject, json4);
 
-        testRestTemplate.delete("http://localhost:" + port + "/student/" + save.getId());
-    }
 
+    }
 
 }

@@ -51,7 +51,11 @@ public class SchoolApplicationStudentTests {
     private FacultyRepository facultyRepository;
 
 
-
+    @BeforeEach
+    void init() {
+        studentRepository.deleteAll();
+        facultyRepository.deleteAll();
+    }
 
     @Test
     void contextLoadsStudent() throws Exception {
@@ -72,7 +76,7 @@ public class SchoolApplicationStudentTests {
         Assertions
                 .assertThat(this.testRestTemplate.getForObject("http://localhost:" + port + "/student/1", String.class))
                 .isNotNull();
-        studentRepository.delete(student);
+
     }
 
     @Test
@@ -83,7 +87,7 @@ public class SchoolApplicationStudentTests {
                 .assertThat(actual)
                 .isNotNull();
         Optional<Student> student1 = studentService.findStudent(1L);
-        studentRepository.delete( student);
+
     }
 
     @Test
@@ -101,8 +105,7 @@ public class SchoolApplicationStudentTests {
         Assertions.assertThat(!expected.equals(actual)).isTrue();
         testRestTemplate.put("http://localhost:" + port + "/student/", expected);
 
-        studentRepository.delete(student2);
-        studentRepository.delete(student3);
+
 
 
     }
@@ -127,7 +130,7 @@ public class SchoolApplicationStudentTests {
 
     @Test
     void findStudentByAgeTest() throws Exception {
-        Student student = new Student( "Вася", 3);
+        Student student = new Student("Вася", 3);
         Student save = studentRepository.save(student);
         List<Student> list = new ArrayList<>();
         list.add(save);
@@ -137,15 +140,15 @@ public class SchoolApplicationStudentTests {
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/findAllByAge/?age=3", String.class);
 
         assertEquals(forObject, json);
-        studentRepository.delete(save);
+
     }
 
     @Test
     void findAllByAgeBetweenTest() throws Exception {
 
         List<Student> list = new ArrayList<>();
-        Student student = new Student( "Васечка", 16);
-        Student student2 = new Student( "Петруха", 45);
+        Student student = new Student("Васечка", 16);
+        Student student2 = new Student("Петруха", 45);
         list.add(student);
         list.add(student2);
         studentRepository.save(student);
@@ -155,18 +158,18 @@ public class SchoolApplicationStudentTests {
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student?min=15&max=45", String.class);
         assertEquals(forObject, json);
-        studentRepository.delete(student);
-        studentRepository.delete(student2);
+
 
     }
+
     @Test
     void findAllStudentsByFacultyTest() {
-        Faculty faculty = new Faculty( 1L,"string", "color");
+        Faculty faculty = new Faculty(1L, "string", "color");
         facultyService.createFaculty(faculty);
         Long lastID = facultyRepository.findLastID();
         faculty.setId(lastID);
 
-        Student student = new Student( "Олег", 8,faculty);
+        Student student = new Student("Олег", 8, faculty);
         Student student2 = new Student("Петя", 12, faculty);
         List<Student> list2 = new ArrayList<>();
         list2.add(student);
@@ -186,10 +189,71 @@ public class SchoolApplicationStudentTests {
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/StudentByFaculty/?id=1", String.class);
         assertEquals(forObject, json4);
 
-        studentRepository.delete(student);
-        studentRepository.delete(student2);
-        facultyRepository.delete(faculty);
     }
 
+    @Test
+    void findAllStudentCountTest() {
+        int count = 5;
+        String json = new Gson().toJson(count);
+        Student student = new Student("Гарри", 22);
+        Student student1 = new Student("Рон", 22);
+        Student student2 = new Student("Гермиона", 21);
+        Student student3 = new Student("Петя", 18);
+        Student student4 = new Student("Вася", 17);
+        studentRepository.save(student);
+        studentRepository.save(student1);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        studentRepository.save(student4);
 
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/AllStudentCount", String.class);
+        assertEquals(json,forObject);
+    }
+
+    @Test
+    void findAllStudentAverageTest() {
+        double count = 20.0;
+        String json = new Gson().toJson(count);
+        Student student = new Student("Гарри", 22);
+        Student student1 = new Student("Рон", 22);
+        Student student2 = new Student("Гермиона", 21);
+        Student student3 = new Student("Петя", 18);
+        Student student4 = new Student("Вася", 17);
+        studentRepository.save(student);
+        studentRepository.save(student1);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        studentRepository.save(student4);
+
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/AllStudentAverage", String.class);
+        assertEquals(json,forObject);
+    }
+    @Test
+    void findFiveLastStudentTest() {
+        Student student = new Student("Гарри", 22);
+        Student student1 = new Student("Рон", 22);
+        Student student2 = new Student("Гермиона", 21);
+        Student student3 = new Student("Петя", 18);
+        Student student4 = new Student("Вася", 17);
+        Student student5 = new Student("Олеся", 12);
+        Student student6 = new Student("Денис", 15);
+        studentRepository.save(student);
+        studentRepository.save(student1);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        studentRepository.save(student4);
+        studentRepository.save(student5);
+        studentRepository.save(student6);
+
+        List<Student> students = new ArrayList<>();
+        students.add(student6);
+        students.add(student5);
+        students.add(student4);
+        students.add(student3);
+        students.add(student2);
+        String json = new Gson().toJson(students);
+
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/findFiveLastStudent", String.class);
+        assertEquals(json,forObject);
+    }
 }

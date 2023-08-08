@@ -66,7 +66,6 @@ public class AvatarController {
 
     @GetMapping("/findAllAvatarsByPages")
     public List<Avatar> findAllAvatarsByPages(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
-
         return avatarService.findAllAvatarsByPages(pageNumber,pageSize);
     }
 
