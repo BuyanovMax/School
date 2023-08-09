@@ -9,7 +9,7 @@
   Также не забудьте добавить таблицам первичные ключи и связать их.
  */
 create table person(
-    id int primary key ,
+    id serial primary key ,
     name varchar(255) not null ,
     age int not null check (age>0),
     driver_license boolean,
@@ -17,7 +17,7 @@ create table person(
 );
 
 create table car(
-    id int primary key ,
+    id serial primary key ,
     brand varchar(255) not null ,
     model varchar(255) not null ,
     cost numeric not null
