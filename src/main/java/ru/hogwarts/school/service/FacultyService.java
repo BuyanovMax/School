@@ -47,7 +47,7 @@ public class FacultyService {
         return facultyRepository.findByStudent_id(id);
     }
 
-    public java.lang.Long findLastID() {
+    public Long findLastID() {
         return facultyRepository.findLastID();
     }
 

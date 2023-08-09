@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
+import ru.hogwarts.school.repositories.AvatarRepository;
 import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.StudentService;
 
@@ -17,7 +17,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("avatar")
@@ -25,10 +28,12 @@ public class AvatarController {
 
     private final StudentService studentService;
     private final AvatarService avatarService;
+    private final AvatarRepository avatarRepository;
 
-    public AvatarController(StudentService studentService, AvatarService avatarService) {
+    public AvatarController(StudentService studentService, AvatarService avatarService, AvatarRepository avatarRepository) {
         this.studentService = studentService;
         this.avatarService = avatarService;
+        this.avatarRepository = avatarRepository;
     }
 
     @PostMapping(value = "/{studentId}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -68,5 +73,7 @@ public class AvatarController {
     public List<Avatar> findAllAvatarsByPages(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
         return avatarService.findAllAvatarsByPages(pageNumber,pageSize);
     }
+
+
 
 }
