@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
+
+
 
 @Service
 public class AvatarService {
@@ -35,13 +38,13 @@ public class AvatarService {
         Path filePath = Path.of(avatarsDir, student.getId() + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
-
         try (InputStream inputStream = avatarFile.getInputStream();
              OutputStream outputStream = Files.newOutputStream(filePath,CREATE_NEW);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream,1024);
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream,1024)) {
             bufferedInputStream.transferTo(bufferedOutputStream);
         }
+
         Avatar avatar = findAvatar(studentId);
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());

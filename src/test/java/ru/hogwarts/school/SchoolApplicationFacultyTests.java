@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.controller.AvatarController;
 import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.controller.StudentController;
@@ -24,6 +26,7 @@ import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -51,8 +54,8 @@ class SchoolApplicationFacultyTests {
     private StudentRepository studentRepository;
     @Autowired
     private FacultyRepository facultyRepository;
-
-
+@Autowired
+    private EntityManager entityManager;
     @BeforeEach
     void init() {
 
@@ -183,6 +186,11 @@ class SchoolApplicationFacultyTests {
         assertEquals(forObject, json4);
 
 
+    }
+    @Test
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    void  adfcafdv() {
+        Student student = entityManager.find(Student.class, 1);
     }
 
 }
