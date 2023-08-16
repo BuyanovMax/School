@@ -1,96 +1,53 @@
 package ru.hogwarts.school.model;
+import liquibase.pro.packaged.L;
+import lombok.*;
+import ru.hogwarts.school.auditEntity.AuditableEntity;
+//import org.hibernate.envers.Audited;
+//import org.hibernate.envers.RelationTargetAuditMode;
+
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Avatar {
+public class Avatar extends AuditableEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "file_path")
     private String filePath;
+    @Column(name = "long_size")
     private Long longSize;
+    @Column(name = "media_type")
     private String mediaType;
+    @Column(name = "data")
     private byte[] data;
+
     @OneToOne
     private Student student;
-
-    public Avatar() {
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
 
     public long getLongSize() {
         return longSize;
     }
-
-    public void setLongSize(long longSize) {
-        this.longSize = longSize;
+    public String getFilePath() {
+        return filePath;
     }
-
+    public Student getStudent() {
+        return student;
+    }
+    public byte[] getData() {
+        return data;
+    }
     public String getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
 
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Avatar avatar = (Avatar) o;
-        return Objects.equals(id, avatar.id) && Objects.equals(filePath, avatar.filePath) && Objects.equals(longSize, avatar.longSize) && Objects.equals(mediaType, avatar.mediaType) && Arrays.equals(data, avatar.data) && Objects.equals(student, avatar.student);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id, filePath, longSize, mediaType, student);
-        result = 31 * result + Arrays.hashCode(data);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Avatar{" +
-               "id=" + id +
-               ", filePath='" + filePath + '\'' +
-               ", longSize=" + longSize +
-               ", mediaType='" + mediaType + '\'' +
-               ", data=" + Arrays.toString(data) +
-               '}';
-    }
 }
+
+

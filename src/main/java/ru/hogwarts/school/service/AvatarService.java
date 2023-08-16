@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 
 @Service
+@Slf4j
 public class AvatarService {
 
     private final AvatarRepository avatarRepository;
@@ -34,6 +36,7 @@ public class AvatarService {
     private String avatarsDir;
 
     public void uploadFile(Long studentId, MultipartFile avatarFile) throws IOException {
+        log.info("Был вызван метод: uploadFile");
         Student student = studentRepository.getById(studentId);
         Path filePath = Path.of(avatarsDir, student.getId() + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -56,14 +59,17 @@ public class AvatarService {
     }
 
     public Avatar findAvatar(Long studentId) {
+        log.info("Был вызван метод: findAvatar");
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     private String getExtensions(String fileName) {
+        log.info("Был вызван метод: getExtensions");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     public List<Avatar> findAllAvatarsByPages(Integer pageNumber, Integer pageSize) {
+        log.info("Был вызван метод: findAllAvatarsByPages");
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("avatar")
+@RequestMapping("/avatar")
 public class AvatarController {
 
     private final StudentService studentService;
@@ -64,7 +64,7 @@ public class AvatarController {
              OutputStream outputStream = response.getOutputStream()) {
             response.setStatus(200);
             response.setContentType(avatar.getMediaType());
-            response.setContentLength((int) avatar.getLongSize());
+            response.setContentLength((int)avatar.getLongSize());
             inputStream.transferTo(outputStream);
         }
     }
