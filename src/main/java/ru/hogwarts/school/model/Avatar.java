@@ -15,6 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
 public class Avatar extends AuditableEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class Avatar extends AuditableEntity<Long> {
     private Student student;
 
     public long getLongSize() {
-        return longSize;
+        return this.longSize;
     }
     public String getFilePath() {
         return filePath;

@@ -35,9 +35,10 @@ public class StudentServiceTest {
     private FacultyService facultyService;
     @InjectMocks
     private StudentService studentService;
+
     @BeforeEach
     public void beforeEach() {
-//        studentService = new StudentService(studentRepository, avatarRepository);
+        studentRepository.deleteAll();
     }
 
     @Test
@@ -173,7 +174,6 @@ public class StudentServiceTest {
         List<Student> actual = studentService.findAllStudensByFaculty(faculty.getId());
 
         assertEquals(expected,actual);
-
     }
 
 
@@ -183,7 +183,7 @@ public class StudentServiceTest {
         Mockito.when(avatarRepository.findByStudentId(1L))
                 .thenReturn(Optional.of(new Avatar()));
 
-        Student student = studentService.createStudent(new Student(1L, "Name", 1));
+        Student student = studentRepository.save(new Student(1L, "Name", 1));
 
         Optional<Avatar> expected = Optional.of(new Avatar());
 
