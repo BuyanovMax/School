@@ -1,35 +1,24 @@
 package ru.hogwarts.school.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
-import ru.hogwarts.school.auditEntity.AuditableEntity;
-//import org.hibernate.envers.Audited;
-//import org.hibernate.envers.RelationTargetAuditMode;
-
-
+import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@OptimisticLocking(type = OptimisticLockType.VERSION)
-public class Faculty extends AuditableEntity<Long> {
+public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private Long id;
-    @Version
-    private Long version;
-    @Column(name = "name")
+    @Getter
+    @Setter
     private String name;
-    @Column(name = "color")
+    @Getter
+    @Setter
     private String color;
 
     @OneToMany(mappedBy = "faculty")
@@ -45,6 +34,10 @@ public class Faculty extends AuditableEntity<Long> {
         this.name = name;
         this.color = color;
     }
+
+
+
+
 
 
 }

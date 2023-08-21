@@ -1,33 +1,23 @@
 package ru.hogwarts.school.model;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.hogwarts.school.auditEntity.AuditableEntity;
-//import org.hibernate.envers.Audited;
-//import org.hibernate.envers.RelationTargetAuditMode;
-
-
 import javax.persistence.*;
 import java.util.Objects;
 
-
-
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student extends AuditableEntity<Long> {
+@Entity
+public class Student{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "age")
-    private int age;
+    private Integer age;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
@@ -46,5 +36,6 @@ public class Student extends AuditableEntity<Long> {
         this.name = name;
         this.age = age;
     }
+
 
 }

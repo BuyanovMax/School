@@ -187,10 +187,6 @@ class SchoolApplicationFacultyTests {
 
 
     }
-    @Test
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    void  adfcafdv() {
-        Student student = entityManager.find(Student.class, 1);
-    }
+
 
 }

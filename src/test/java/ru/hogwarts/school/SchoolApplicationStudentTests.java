@@ -145,10 +145,11 @@ public class SchoolApplicationStudentTests {
 
     @Test
     void findAllByAgeBetweenTest() throws Exception {
-
+        Faculty faculty = new Faculty("Гриффиндор", "Желтый");
+        facultyRepository.save(faculty);
         List<Student> list = new ArrayList<>();
-        Student student = new Student("Васечка", 16);
-        Student student2 = new Student("Петруха", 45);
+        Student student = new Student("Васечка", 16,faculty);
+        Student student2 = new Student("Петруха", 45,faculty);
         list.add(student);
         list.add(student2);
         studentRepository.save(student);

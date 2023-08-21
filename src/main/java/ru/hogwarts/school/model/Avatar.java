@@ -1,32 +1,18 @@
 package ru.hogwarts.school.model;
-import liquibase.pro.packaged.L;
 import lombok.*;
-import ru.hogwarts.school.auditEntity.AuditableEntity;
-//import org.hibernate.envers.Audited;
-//import org.hibernate.envers.RelationTargetAuditMode;
-
-
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Objects;
 
-
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Entity
-
-public class Avatar extends AuditableEntity<Long> {
+public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "file_path")
     private String filePath;
-    @Column(name = "long_size")
     private Long longSize;
-    @Column(name = "media_type")
     private String mediaType;
-    @Column(name = "data")
     private byte[] data;
 
     @OneToOne
