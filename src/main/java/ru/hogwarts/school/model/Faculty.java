@@ -7,6 +7,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
+@EqualsAndHashCode
 public class Faculty {
 
     @Id

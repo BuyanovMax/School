@@ -130,7 +130,9 @@ public class SchoolApplicationStudentTests {
 
     @Test
     void findStudentByAgeTest() throws Exception {
-        Student student = new Student("Вася", 3);
+        Faculty faculty = new Faculty("String", "sdvsdfv");
+        facultyRepository.save(faculty);
+        Student student = new Student("Вася", 3,faculty);
         Student save = studentRepository.save(student);
         List<Student> list = new ArrayList<>();
         list.add(save);
@@ -170,8 +172,8 @@ public class SchoolApplicationStudentTests {
         Long lastID = facultyRepository.findLastID();
         faculty.setId(lastID);
 
-        Student student = new Student("Олег", 8, faculty);
-        Student student2 = new Student("Петя", 12, faculty);
+        Student student = new Student("Олег", 8,faculty);
+        Student student2 = new Student("Петя", 12,faculty);
         List<Student> list2 = new ArrayList<>();
         list2.add(student);
         list2.add(student2);
@@ -180,14 +182,14 @@ public class SchoolApplicationStudentTests {
         Student save1 = studentRepository.save(student2);
 
 
-        Student student1 = new Student(save.getId(), "Олег", 8);
-        Student student3 = new Student(save1.getId(), "Петя", 12);
+        Student student1 = new Student(save.getId(), "Олег", 8,faculty);
+        Student student3 = new Student(save1.getId(), "Петя", 12,faculty);
         List<Student> list3 = new ArrayList<>();
         list3.add(student1);
         list3.add(student3);
         String json4 = new Gson().toJson(list3);
 
-        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/StudentByFaculty/?id=1", String.class);
+        String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/student/StudentByFaculty/?id=2", String.class);
         assertEquals(forObject, json4);
 
     }
@@ -231,13 +233,15 @@ public class SchoolApplicationStudentTests {
     }
     @Test
     void findFiveLastStudentTest() {
-        Student student = new Student("Гарри", 22);
-        Student student1 = new Student("Рон", 22);
-        Student student2 = new Student("Гермиона", 21);
-        Student student3 = new Student("Петя", 18);
-        Student student4 = new Student("Вася", 17);
-        Student student5 = new Student("Олеся", 12);
-        Student student6 = new Student("Денис", 15);
+        Faculty faculty = new Faculty("adv", "sdv");
+        facultyRepository.save(faculty);
+        Student student = new Student("Гарри", 22,faculty);
+        Student student1 = new Student("Рон", 22,faculty);
+        Student student2 = new Student("Гермиона", 21,faculty);
+        Student student3 = new Student("Петя", 18,faculty);
+        Student student4 = new Student("Вася", 17,faculty);
+        Student student5 = new Student("Олеся", 12,faculty);
+        Student student6 = new Student("Денис", 15,faculty);
         studentRepository.save(student);
         studentRepository.save(student1);
         studentRepository.save(student2);

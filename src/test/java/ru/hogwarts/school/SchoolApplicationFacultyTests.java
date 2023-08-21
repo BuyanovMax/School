@@ -174,11 +174,11 @@ class SchoolApplicationFacultyTests {
     void findFacultyByStudentTest() {
         Faculty faculty = new Faculty( "string", "color");
         Faculty save = facultyRepository.save(faculty);
-
+        System.out.println(faculty);
         Student student = new Student("Олег", 8, faculty);
         Student save1 = studentRepository.save(student);
-
-        Faculty faculty1 = new Faculty(9L, "string", "color");
+        System.out.println(student);
+        Faculty faculty1 = new Faculty(12L, "string", "color");
         String json4 = new Gson().toJson(faculty1);
 
         String forObject = testRestTemplate.getForObject("http://localhost:" + port + "/faculty/facultyByStudent/?id=28", String.class);

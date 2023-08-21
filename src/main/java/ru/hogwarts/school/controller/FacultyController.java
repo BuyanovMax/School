@@ -71,7 +71,7 @@ public class FacultyController {
 
     @GetMapping
     public ResponseEntity<List<Faculty>> findFacultyByNameOrColor(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
-            return ResponseEntity.ok(facultyService.findFacultyByNameOrColor(name, color));
+        return ResponseEntity.ok(facultyService.findFacultyByNameOrColor(name, color));
     }
 
     @GetMapping("/facultyByStudent")
@@ -80,5 +80,10 @@ public class FacultyController {
             return ResponseEntity.ok(facultyService.findFacultyByStudent(id));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @GetMapping("findLongestFacultyName")
+    public ResponseEntity<Optional<String>> findLongestFacultyName() {
+        return ResponseEntity.ok(facultyService.findLongestFacultyName());
     }
 }

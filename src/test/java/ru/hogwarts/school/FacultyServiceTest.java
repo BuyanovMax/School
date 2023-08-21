@@ -38,7 +38,7 @@ public class FacultyServiceTest {
 
     @BeforeEach
     public void beforeEach() {
-        facultyService = new FacultyService(facultyRepository);
+        facultyRepository.deleteAll();
     }
 
     @Test

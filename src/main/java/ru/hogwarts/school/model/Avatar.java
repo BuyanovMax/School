@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+//@ToString
 @Entity
 public class Avatar {
     @Id
@@ -18,20 +18,52 @@ public class Avatar {
     @OneToOne
     private Student student;
 
-    public long getLongSize() {
-        return this.longSize;
+    public Long getId() {
+        return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getFilePath() {
         return filePath;
     }
-    public Student getStudent() {
-        return student;
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
+
+    public long getLongSize() {
+        return longSize;
+    }
+
+    public void setLongSize(long longSize) {
+        this.longSize = longSize;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
     public byte[] getData() {
         return data;
     }
-    public String getMediaType() {
-        return mediaType;
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
 

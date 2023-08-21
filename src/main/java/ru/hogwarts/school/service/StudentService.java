@@ -8,8 +8,10 @@ import ru.hogwarts.school.repositories.AvatarRepository;
 import ru.hogwarts.school.repositories.StudentRepository;
 
 import javax.persistence.LockModeType;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -79,4 +81,20 @@ public class StudentService {
         return studentRepository.findFiveLastStudent();
     }
 
+    public List<String> findAllStudentsStartsWithLetter(Character letter) {
+
+        return studentRepository.findAll().stream()
+                .filter(student -> student.getName().charAt(0) == letter)
+                .sorted(Comparator.comparing(Student::getName))
+                .map(student -> student.getName().toUpperCase())
+                .collect(toList());
+
+    }
+
+    public OptionalDouble findAverageAgeFromAllStudent() {
+        return studentRepository.findAll().stream()
+                .map(student -> student.getAge())
+                .mapToDouble(Integer::doubleValue)
+                .average();
+    }
 }

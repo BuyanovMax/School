@@ -1,7 +1,6 @@
 package ru.hogwarts.school.model;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,8 +8,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Student{
 
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +20,12 @@ public class Student{
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    public Student( String name, int age, Faculty faculty) {
+    public Student(String name, int age, Faculty faculty) {
         this.name = name;
         this.age = age;
         this.faculty = faculty;
     }
+
     public Student(String name, int age) {
         this.name = name;
         this.age = age;

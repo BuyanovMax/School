@@ -1,11 +1,14 @@
 package ru.hogwarts.school.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -59,6 +62,15 @@ public final class FacultyService {
     public Long findLastID() {
         log.info("Был вызван метод: findLastID");
         return facultyRepository.findLastID();
+    }
+
+    public Optional<String> findLongestFacultyName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .sorted(Comparator.comparing(String::length).reversed())
+                .limit(1)
+                .findFirst();
+
     }
 
 }

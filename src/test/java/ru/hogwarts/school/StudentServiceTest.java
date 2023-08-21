@@ -180,10 +180,12 @@ public class StudentServiceTest {
 
     @Test
     void findAvatarTest() {
+        Faculty faculty = new Faculty("sdvsvc", "sdvsdv");
+        facultyRepository.save(faculty);
         Mockito.when(avatarRepository.findByStudentId(1L))
                 .thenReturn(Optional.of(new Avatar()));
-
-        Student student = studentRepository.save(new Student(1L, "Name", 1));
+        Student student = new Student(1L, "Name", 1,faculty);
+        studentRepository.save(student);
 
         Optional<Avatar> expected = Optional.of(new Avatar());
 
