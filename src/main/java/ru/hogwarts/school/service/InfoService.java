@@ -24,11 +24,12 @@ public class InfoService implements InfoInterface {
 
     public Integer getValue() {
         long l = System.currentTimeMillis();
-        int sum = Stream.iterate(1, a -> a + 1)
-                .parallel()
-                .limit(1_000_000)
-                .reduce(0, (a, b) -> a + b);
+        int sum = 0;
+        for (int i = 1; i < 1_000_000; i++) {
+            sum += i;
+        }
         long l1 = System.currentTimeMillis() - l;
+        System.out.println(l1);
 
         return sum;
     }
