@@ -4,8 +4,9 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
+@ToString
 @Entity
+@Data
 public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

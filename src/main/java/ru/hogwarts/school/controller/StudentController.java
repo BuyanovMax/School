@@ -3,8 +3,9 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.dto.StudentCreateDto;
+import ru.hogwarts.school.dto.StudentReadDto;
 import ru.hogwarts.school.exception.NotFoundException;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -27,7 +28,7 @@ public class StudentController {
 
 
     @PostMapping
-    public ResponseEntity<Student> createFaculty(@RequestBody Student student) {
+    public ResponseEntity<StudentReadDto> createStudent(@RequestBody StudentCreateDto student) {
         if (student != null) {
             return ResponseEntity.ok(studentService.createStudent(student));
         }
@@ -35,7 +36,7 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Student>> findFaculty(@PathVariable Long id) {
+    public ResponseEntity<Optional<StudentReadDto>> findStudent(@PathVariable Long id) {
         try {
             if (id != null) {
                 return ResponseEntity.ok(studentService.findStudent(id));
@@ -47,10 +48,10 @@ public class StudentController {
     }
 
     @PutMapping
-    public ResponseEntity<Student> editFaculty(@RequestBody Student student) {
+    public ResponseEntity<StudentReadDto> editStudent(@RequestBody StudentCreateDto student, Long studentId) {
         try {
             if (student != null) {
-                return ResponseEntity.ok(studentService.editStudent(student));
+                return ResponseEntity.ok(studentService.updateStudent(studentId,student));
             }
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -66,7 +67,7 @@ public class StudentController {
     }
 
     @GetMapping("/findAllByAge/")
-    public ResponseEntity<List<Student>> findStudentByAge(Integer age) {
+    public ResponseEntity<List<StudentReadDto>> findStudentByAge(Integer age) {
         if (age != null) {
             return ResponseEntity.ok(studentService.findStudentByAge(age));
         }
@@ -74,7 +75,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> findAllByAgeBetween(Integer min, Integer max) {
+    public ResponseEntity<List<StudentReadDto>> findAllByAgeBetween(Integer min, Integer max) {
         if (min != null || max != null) {
             return ResponseEntity.ok(studentService.findAllByAgeBetween(min, max));
         }
@@ -82,7 +83,7 @@ public class StudentController {
     }
 
     @GetMapping("/StudentByFaculty/")
-    public ResponseEntity<List<Student>> findByFacultyId(Long id) {
+    public ResponseEntity<List<StudentReadDto>> findByFacultyId(Long id) {
         if (id != null) {
             return ResponseEntity.ok(studentService.findAllStudensByFaculty(id));
         }
@@ -101,7 +102,7 @@ public class StudentController {
     }
 
     @GetMapping("findFiveLastStudent")
-    public ResponseEntity<List<Student>> findFiveLastStudent() {
+    public ResponseEntity<List<StudentReadDto>> findFiveLastStudent() {
         return ResponseEntity.ok(studentService.findFiveLastStudent());
     }
 
@@ -114,4 +115,44 @@ public class StudentController {
     public ResponseEntity<OptionalDouble> findAverageAgeFromAllStudent() {
         return ResponseEntity.ok(studentService.findAverageAgeFromAllStudent());
     }
+
+    @GetMapping("checkStudentsMultithreading")
+    public ResponseEntity<List<StudentReadDto>> checkStudentsMultithreading() {
+        return ResponseEntity.ok(studentService.checkStudentsMultithreading());
+
+    }  @GetMapping("checkStudentsMultithreadingSynchronized")
+    public ResponseEntity<List<StudentReadDto>> checkStudentsMultithreadingSynchronized() {
+        return ResponseEntity.ok(studentService.checkStudentsMultithreadingSynchronized());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

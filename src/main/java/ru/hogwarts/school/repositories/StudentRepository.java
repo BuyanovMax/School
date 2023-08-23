@@ -2,6 +2,7 @@ package ru.hogwarts.school.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.hogwarts.school.model.Student;
 
@@ -32,9 +33,19 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 
 
+//return new JPAQuery<Payment>(session)
+//            .select(payment)
+//                .from(payment)
+//                .join(payment.receiver, user)
+//                .join(user.company, company)
+//                .where(company.name.eq(companyName))
+//            .orderBy(user.personalInfo.firstname.asc(), payment.amount.asc())
+//            .fetch();
 
 
-//    @Query(value = "select s from Student s where s.faculty.id = :id")
-//    List<Student> findStudentsByFacultyId(long id);
+
+//    @Query(value = "select s from Student s where  s.faculty.id = :id")
+//    @Query(value = "select s from Student s where s.name like %:id%)
+//    List<Student> findStudentsByFacultyId(@Param("id") long id);
 
 }
