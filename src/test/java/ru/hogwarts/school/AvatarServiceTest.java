@@ -67,8 +67,8 @@ public class AvatarServiceTest {
         Student student = new Student(1L, "Name", 1);
         Student student2 = new Student(2L, "Name2", 2);
 
-        when(studentService.createStudent(student)).thenReturn(student);
-        when(studentService.createStudent(student2)).thenReturn(student2);
+//        when(studentService.createStudent(student)).thenReturn(student);
+//        when(studentService.createStudent(student2)).thenReturn(student2);
 
 
         Avatar avatar = new Avatar();

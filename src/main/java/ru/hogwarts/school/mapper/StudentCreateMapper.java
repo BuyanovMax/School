@@ -12,7 +12,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentCreateMapper implements Mapper<StudentCreateDto, Student> {
     private final FacultyRepository facultyRepository;
-    private final FacultyCreateMapper facultyCreateMapper;
 
     @Override
     public Student mapTo(StudentCreateDto obj) {

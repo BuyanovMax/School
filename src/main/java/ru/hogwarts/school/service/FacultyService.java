@@ -1,8 +1,14 @@
 package ru.hogwarts.school.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.dto.FacultyCreateDto;
+import ru.hogwarts.school.dto.FacultyReadDto;
+import ru.hogwarts.school.dto.StudentCreateDto;
+import ru.hogwarts.school.dto.StudentReadDto;
+import ru.hogwarts.school.mapper.FacultyCreateMapper;
+import ru.hogwarts.school.mapper.FacultyReadMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
@@ -10,53 +16,81 @@ import ru.hogwarts.school.repositories.FacultyRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public final class FacultyService {
 
     private final FacultyRepository facultyRepository;
+    private final FacultyCreateMapper facultyCreateMapper;
+    private final FacultyReadMapper facultyReadMapper;
 
-    public FacultyService(FacultyRepository facultyRepository) {
-        this.facultyRepository = facultyRepository;
-    }
-
-
-    public Faculty createFaculty(Faculty faculty) {
+    public FacultyReadDto createFaculty(FacultyCreateDto faculty) {
         log.trace("Был вызван метод: createFaculty");
-        return facultyRepository.save(faculty);
+        return Optional.of(faculty)
+                .map(facultyCreateMapper::mapTo)
+                .map(facultyRepository::save)
+                .map(facultyReadMapper::mapTo)
+                .orElseThrow();
+
+
     }
 
-    public Optional<Faculty> findFaculty(Long id) {
+    public Optional<FacultyReadDto> findFaculty(Long id) {
         log.debug("Был вызван метод: findFaculty");
-        return facultyRepository.findById(id);
+        return (facultyRepository.findById(id))
+                .map(facultyReadMapper::mapTo);
     }
 
-    public Faculty editFaculty(Faculty faculty) {
+    public FacultyReadDto updateFaculty(long facultyId,FacultyCreateDto facultyCreateDto) {
         log.info("Был вызван метод: editFaculty");
-        return facultyRepository.save(faculty);
+        Faculty updateFaculty = facultyRepository.findById(facultyId)
+                .map(faculty -> {
+                    faculty.setName(facultyCreateDto.getName());
+                    faculty.setColor(facultyCreateDto.getColor());
+                    return faculty;
+                })
+                .orElseThrow();
+        facultyRepository.saveAndFlush(updateFaculty);
+
+        return Optional.of(updateFaculty)
+                .map(facultyReadMapper::mapTo)
+                .orElseThrow();
+
 
     }
 
-    public void deleteFaculty(Long id) {
+
+    public FacultyReadDto deleteFaculty(Long id) {
         log.warn("Был вызван метод: deleteFaculty");
-        facultyRepository.deleteById(id);
+        Optional<Faculty> byId = facultyRepository.findById(id);
+        return byId.map(facultyReadMapper::mapTo).orElseThrow();
+
     }
 
 
-    public List<Faculty> findAllByColor(String color) {
+    public List<FacultyReadDto> findAllByColor(String color) {
         log.error("Был вызван метод: findAllByColor");
-        return facultyRepository.findByColor(color);
+        return facultyRepository.findByColor(color).stream()
+                .map(facultyReadMapper::mapTo)
+                .collect(toList());
     }
 
-    public List<Faculty> findFacultyByNameOrColor(String name, String color) {
+    public List<FacultyReadDto> findFacultyByNameOrColor(String name, String color) {
         log.info("Был вызван метод: findFacultyByNameOrColor");
-        return facultyRepository.findAllByNameOrColorIgnoreCase(name, color);
+        return facultyRepository.findAllByNameOrColorIgnoreCase(name, color).stream()
+                .map(facultyReadMapper::mapTo)
+                .collect(toList());
 
     }
 
-    public Faculty findFacultyByStudent(Long id) {
+    public FacultyReadDto findFacultyByStudent(Long id) {
         log.info("Был вызван метод: findFacultyByStudent");
-        return facultyRepository.findByStudent_id(id);
+        return Optional.of(facultyRepository.findByStudent_id(id))
+                .map(facultyReadMapper::mapTo)
+                .orElseThrow();
     }
 
     public Long findLastID() {
