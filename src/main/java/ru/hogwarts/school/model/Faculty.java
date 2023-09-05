@@ -1,6 +1,5 @@
 package ru.hogwarts.school.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +17,7 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
-    @JsonManagedReference
+//    @JsonManagedReference
     @OneToMany(mappedBy = "faculty")
     private List<Student> student;
 

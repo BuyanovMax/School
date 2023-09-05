@@ -56,6 +56,17 @@
 //    private FacultyRepository facultyRepository;
 //@Autowired
 //    private EntityManager entityManager;
+
+//private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres")
+//        .withUsername("postgres")
+//        .withPassword("shadow")
+//        .withDatabaseName("postgres");
+//
+//@BeforeAll
+//static void runContainer() {
+//        POSTGRE_SQL_CONTAINER.start();
+//        }
+
 //    @BeforeEach
 //    void init() {
 //

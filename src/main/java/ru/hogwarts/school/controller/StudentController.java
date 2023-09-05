@@ -62,8 +62,8 @@ public class StudentController {
 
 
     @DeleteMapping("{id}")
-    public void deleteFaculty(@PathVariable Long id) {
-        studentService.deleteStudent(id);
+    public StudentReadDto deleteFaculty(@PathVariable Long id) {
+        return studentService.deleteStudent(id);
     }
 
     @GetMapping("/findAllByAge/")

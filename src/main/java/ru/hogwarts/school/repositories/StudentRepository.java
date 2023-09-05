@@ -27,32 +27,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query(value = "select avg(age) from student", nativeQuery = true)
     Double findAllStudentAgeAverage();
 
-//    @Query(value = "select * from student order by id desc limit 5", nativeQuery = true)
-    @Query(value = """
-              select s
-              from Student s 
-              join fetch s.faculty
-              order by s.id desc
-              
-              """)
+    @Query(value = "select * from student order by id desc limit 5", nativeQuery = true)
     List<Student> findFiveLastStudent();
 
-//    limit 5
-
-
-//return new JPAQuery<Payment>(session)
-//            .select(payment)
-//                .from(payment)
-//                .join(payment.receiver, user)
-//                .join(user.company, company)
-//                .where(company.name.eq(companyName))
-//            .orderBy(user.personalInfo.firstname.asc(), payment.amount.asc())
-//            .fetch();
 
 
 
-//    @Query(value = "select s from Student s where  s.faculty.id = :id")
-//    @Query(value = "select s from Student s where s.name like %:id%)
-//    List<Student> findStudentsByFacultyId(@Param("id") long id);
+
 
 }

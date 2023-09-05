@@ -1,5 +1,6 @@
 package ru.hogwarts.school;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.testcontainers.containers.PostgreSQLContainer;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
@@ -37,6 +39,16 @@ public class AvatarServiceTest {
     @Captor
     private ArgumentCaptor<Avatar> avatarArgumentCaptor;
 
+
+    private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres")
+            .withUsername("postgres")
+            .withPassword("shadow")
+            .withDatabaseName("postgres");
+
+    @BeforeAll
+    static void runContainer() {
+        POSTGRE_SQL_CONTAINER.start();
+    }
     @Test
     void uploadFileTest() throws IOException {
 
@@ -66,10 +78,6 @@ public class AvatarServiceTest {
         int pageSize = 2;
         Student student = new Student(1L, "Name", 1);
         Student student2 = new Student(2L, "Name2", 2);
-
-//        when(studentService.createStudent(student)).thenReturn(student);
-//        when(studentService.createStudent(student2)).thenReturn(student2);
-
 
         Avatar avatar = new Avatar();
         Avatar avatar2 = new Avatar();

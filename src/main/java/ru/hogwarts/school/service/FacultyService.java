@@ -5,16 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.FacultyCreateDto;
 import ru.hogwarts.school.dto.FacultyReadDto;
-import ru.hogwarts.school.dto.StudentCreateDto;
-import ru.hogwarts.school.dto.StudentReadDto;
 import ru.hogwarts.school.mapper.FacultyCreateMapper;
 import ru.hogwarts.school.mapper.FacultyReadMapper;
 import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -66,7 +62,9 @@ public final class FacultyService {
     public FacultyReadDto deleteFaculty(Long id) {
         log.warn("Был вызван метод: deleteFaculty");
         Optional<Faculty> byId = facultyRepository.findById(id);
-        return byId.map(facultyReadMapper::mapTo).orElseThrow();
+        Optional<Faculty> faculty = byId;
+        facultyRepository.deleteById(id);
+        return faculty.map(facultyReadMapper::mapTo).orElseThrow();
 
     }
 

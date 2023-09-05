@@ -69,8 +69,9 @@ public class StudentService {
     public StudentReadDto deleteStudent(Long id) {
         log.warn("Был вызван метод: deleteStudent");
         Optional<Student> byId = studentRepository.findById(id);
+        Optional<Student> student = byId;
         studentRepository.deleteById(id);
-        return byId.map(studentReadMapper::mapTo).orElseThrow();
+        return student.map(studentReadMapper::mapTo).orElseThrow();
     }
 
     public List<StudentReadDto> findStudentByAge(Integer age) {
