@@ -1,4 +1,5 @@
 package ru.hogwarts.school.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
 
@@ -15,7 +16,7 @@ public class Avatar {
     private Long longSize;
     private String mediaType;
     private byte[] data;
-
+    @JsonManagedReference
     @OneToOne
     private Student student;
 
