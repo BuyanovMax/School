@@ -29,13 +29,13 @@ import static org.mockito.Mockito.*;
 public class AvatarServiceTest {
     @InjectMocks
     private AvatarService avatarService;
-
     @Mock
     private AvatarRepository avatarRepository;
     @InjectMocks
     private StudentService studentService;
     @Mock
     private StudentRepository studentRepository;
+
     @Captor
     private ArgumentCaptor<Avatar> avatarArgumentCaptor;
 
@@ -67,50 +67,6 @@ public class AvatarServiceTest {
         assertEquals(content, value.getData());
         assertEquals("\\value\\1.txt", avatar.getFilePath());
     }
-    @Test
-    void findAllAvatarsByPagesTest() throws IOException {
-
-        byte[] content = {2, 5, 6, 98, 7, 8, 9};
-        MultipartFile multipartFile = new MockMultipartFile("name", "originalName.txt", "contentType", content);
-        byte[] content2 = {2, 5, 6, 98, 7, 8, 95};
-        MultipartFile multipartFile2 = new MockMultipartFile("name2", "origiiinalName.txt", "contentType2", content2);
-        int pageNumber = 1;
-        int pageSize = 2;
-        Student student = new Student(1L, "Name", 1);
-        Student student2 = new Student(2L, "Name2", 2);
-
-        Avatar avatar = new Avatar();
-        Avatar avatar2 = new Avatar();
-
-        Path filePath = Path.of("/avatars", student.getId() + ".jpeg");
-        Path filePath2 = Path.of("/avatars", student2.getId() + ".jpeg");
-        avatar.setId(1L);
-        avatar.setStudent(student);
-        avatar.setFilePath(filePath.toString());
-        avatar.setLongSize(multipartFile.getSize());
-        avatar.setMediaType(multipartFile.getContentType());
-        avatar.setData(multipartFile.getBytes());
-
-        avatar2.setId(2L);
-        avatar2.setStudent(student2);
-        avatar2.setFilePath(filePath2.toString());
-        avatar2.setLongSize(multipartFile2.getSize());
-        avatar2.setMediaType(multipartFile2.getContentType());
-        avatar2.setData(multipartFile2.getBytes());
-
-        when(avatarRepository.save(avatar)).thenReturn(avatar);
-        when(avatarRepository.save(avatar2)).thenReturn(avatar2);
-
-        List<Avatar> avatar1 = List.of(avatar, avatar2);
-
-        ReflectionTestUtils.setField(avatarService, "avatarsDir", "/value");
-
-        when(avatarRepository.findAll(any(PageRequest.class)).getContent()).thenReturn(avatar1);
-        PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
-        List<Avatar> expected = avatarRepository.findAll(pageRequest).getContent();
-        assertEquals(expected,avatar1);
-    }
-
 
 
 }

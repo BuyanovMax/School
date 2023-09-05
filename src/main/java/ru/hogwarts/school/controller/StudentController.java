@@ -48,7 +48,7 @@ public class StudentController {
     }
 
     @PutMapping
-    public ResponseEntity<StudentReadDto> editStudent(@RequestBody StudentCreateDto student, Long studentId) {
+    public ResponseEntity<StudentReadDto> updateStudent(@RequestBody StudentCreateDto student, Long studentId) {
         try {
             if (student != null) {
                 return ResponseEntity.ok(studentService.updateStudent(studentId,student));
