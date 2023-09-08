@@ -29,6 +29,9 @@ public class StudentService {
     static Object flag = new Object();
     static int count = 0;
 
+    /**
+     *  creation of a student in the database and mapping to DTO
+     */
     public StudentReadDto createStudent(StudentCreateDto student) {
         log.trace("Был вызван метод: createStudent");
         return Optional.of(student)
@@ -38,12 +41,18 @@ public class StudentService {
                 .orElseThrow();
     }
 
+    /**
+     *  student search in the database and mapping in DTO
+     */
     public Optional<StudentReadDto> findStudent(Long id) {
         log.trace("Был вызван метод: findStudent");
         return (studentRepository.findById(id))
                 .map(studentReadMapper::mapTo);
     }
 
+    /**
+     *  changing the student in the database and mapping to DTO
+     */
     public StudentReadDto updateStudent(long studentId, StudentCreateDto studentCreateDto) {
         log.info("Был вызван метод: updateStudent");
         Student updatedStudent = studentRepository.findById(studentId)
@@ -65,7 +74,9 @@ public class StudentService {
                 .orElseThrow();
     }
 
-
+    /**
+     *  removal of student in the database and returning the DTO of the deleted entity
+     */
     public StudentReadDto deleteStudent(Long id) {
         log.warn("Был вызван метод: deleteStudent");
         Optional<Student> byId = studentRepository.findById(id);
@@ -74,6 +85,9 @@ public class StudentService {
         return student.map(studentReadMapper::mapTo).orElseThrow();
     }
 
+    /**
+     *  getting all students by age and mapping to DTO
+     */
     public List<StudentReadDto> findStudentByAge(Integer age) {
         log.error("Был вызван метод: findStudentByAge");
         return studentRepository.findByAge(age).stream()
@@ -81,6 +95,9 @@ public class StudentService {
                 .collect(toList());
     }
 
+    /**
+     *  getting all students by age and mapping to DTO
+     */
     public List<StudentReadDto> findAllByAgeBetween(int min, int max) {
         log.info("Был вызван метод: findAllByAgeBetween");
 
@@ -89,6 +106,9 @@ public class StudentService {
                 .collect(toList());
     }
 
+    /**
+     *  getting all students by faculty and mapping to DTO
+     */
     public List<StudentReadDto> findAllStudensByFaculty(Long id) {
         log.info("Был вызван метод: findAllStudensByFaculty");
         return studentRepository.findAllByFaculty_id(id).stream()
@@ -96,21 +116,35 @@ public class StudentService {
                 .collect(toList());
     }
 
+    /**
+     *   getting the last student id saved in the database
+     */
     public Long findLastID() {
         log.info("Был вызван метод: findLastID");
         return studentRepository.findLastID();
     }
 
+    /**
+     *   getting the last student id saved in the database
+     */
     public Integer findAllStudentCount() {
         log.info("Был вызван метод: findAllStudentCount");
         return studentRepository.findAllStudentCount();
     }
 
+
+    /**
+     *   getting the total number of students
+     */
     public Double findAllStudentAgeAverage() {
         log.info("Был вызван метод: findAllStudentAgeAverage");
         return studentRepository.findAllStudentAgeAverage();
     }
 
+
+    /**
+     *   getting the last five students saved in the database
+     */
     @EntityGraph(attributePaths = "faculty")
     public List<StudentReadDto> findFiveLastStudent() {
         log.info("Был вызван метод: findFiveLastStudent");
@@ -119,16 +153,21 @@ public class StudentService {
                 .collect(toList());
     }
 
-    public List<String> findAllStudentsStartsWithLetter(Character letter) {
 
+    /**
+     *   getting all students whose name starts with a specific letter
+     */
+    public List<String> findAllStudentsStartsWithLetter(Character letter) {
         return studentRepository.findAll().stream()
                 .filter(student -> student.getName().charAt(0) == letter)
                 .sorted(Comparator.comparing(Student::getName))
                 .map(student -> student.getName().toUpperCase())
                 .collect(toList());
-
     }
 
+    /**
+     *   search for average age of students
+     */
     public OptionalDouble findAverageAgeFromAllStudent() {
         return studentRepository.findAll().stream()
                 .map(student -> student.getAge())
@@ -136,6 +175,9 @@ public class StudentService {
                 .average();
     }
 
+    /**
+     *   getting all students using multithreading and mapping in DTO
+     */
     public List<StudentReadDto> checkStudentsMultithreading() {
         List<StudentReadDto> list = studentRepository.findAll().stream()
                 .map(studentReadMapper::mapTo)
@@ -160,6 +202,9 @@ public class StudentService {
         return list;
     }
 
+    /**
+     *   getting all students using multithreading (using a synchronized method) and mapping in DTO
+     */
     public List<StudentReadDto> checkStudentsMultithreadingSynchronized() {
         List<StudentReadDto> list = studentRepository.findAll().stream()
                 .map(studentReadMapper::mapTo)
@@ -186,6 +231,10 @@ public class StudentService {
 
     }
 
+
+    /**
+     *   synchronized method (counter by names)
+     */
     public static synchronized void writeToTheConsole(List<StudentReadDto> list) {
         synchronized (flag) {
             System.out.println(list.get(count).getName());

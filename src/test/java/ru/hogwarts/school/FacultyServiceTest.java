@@ -124,7 +124,7 @@ public class FacultyServiceTest {
 
         Mockito.when(facultyRepository.findByColor("Color1")).thenReturn(list);
 
-        List<FacultyReadDto> actual = facultyService.findAllByColor("Color1");
+        List<FacultyReadDto> actual = facultyService.findAllFacultyByColor("Color1");
 
         assertEquals(expected, actual);
     }

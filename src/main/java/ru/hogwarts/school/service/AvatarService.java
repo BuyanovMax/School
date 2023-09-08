@@ -35,6 +35,9 @@ public class AvatarService {
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
+    /**
+     * creating an avatar for a student
+     */
     public void uploadFile(Long studentId, MultipartFile avatarFile) throws IOException {
         log.info("Был вызван метод: uploadFile");
         Student student = studentRepository.getById(studentId);
@@ -57,17 +60,25 @@ public class AvatarService {
         avatarRepository.save(avatar);
 
     }
-
+    /**
+     * search for an avatar in the database
+     */
     public Avatar findAvatar(Long studentId) {
         log.info("Был вызван метод: findAvatar");
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
+    /**
+     * getting file extension
+     */
     private String getExtensions(String fileName) {
         log.info("Был вызван метод: getExtensions");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
+    /**
+     * getting all avatars with pagination
+     */
     public List<Avatar> findAllAvatarsByPages(Integer pageNumber, Integer pageSize) {
         log.info("Был вызван метод: findAllAvatarsByPages");
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);

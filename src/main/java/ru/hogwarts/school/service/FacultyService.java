@@ -23,6 +23,9 @@ public final class FacultyService {
     private final FacultyCreateMapper facultyCreateMapper;
     private final FacultyReadMapper facultyReadMapper;
 
+    /**
+     *  creation of a faculty in the database and mapping to DTO
+     */
     public FacultyReadDto createFaculty(FacultyCreateDto faculty) {
         log.trace("Был вызван метод: createFaculty");
         return Optional.of(faculty)
@@ -30,16 +33,21 @@ public final class FacultyService {
                 .map(facultyRepository::save)
                 .map(facultyReadMapper::mapTo)
                 .orElseThrow();
-
-
     }
 
+
+    /**
+     *  faculty search in the database and mapping in DTO
+     */
     public Optional<FacultyReadDto> findFaculty(Long id) {
         log.debug("Был вызван метод: findFaculty");
         return (facultyRepository.findById(id))
                 .map(facultyReadMapper::mapTo);
     }
 
+    /**
+     *  changing the faculty in the database and mapping to DTO
+     */
     public FacultyReadDto updateFaculty(long facultyId,FacultyCreateDto facultyCreateDto) {
         log.info("Был вызван метод: editFaculty");
         Faculty updateFaculty = facultyRepository.findById(facultyId)
@@ -58,7 +66,9 @@ public final class FacultyService {
 
     }
 
-
+    /**
+     *  removal of faculty in the database and returning the DTO of the deleted entity
+     */
     public FacultyReadDto deleteFaculty(Long id) {
         log.warn("Был вызван метод: deleteFaculty");
         Optional<Faculty> byId = facultyRepository.findById(id);
@@ -68,14 +78,19 @@ public final class FacultyService {
 
     }
 
-
-    public List<FacultyReadDto> findAllByColor(String color) {
+    /**
+     *  search for all faculties by color and mapping in DTO
+     */
+    public List<FacultyReadDto> findAllFacultyByColor(String color) {
         log.error("Был вызван метод: findAllByColor");
         return facultyRepository.findByColor(color).stream()
                 .map(facultyReadMapper::mapTo)
                 .collect(toList());
     }
 
+    /**
+     *  search for all faculties by name or color
+     */
     public List<FacultyReadDto> findFacultyByNameOrColor(String name, String color) {
         log.info("Был вызван метод: findFacultyByNameOrColor");
         return facultyRepository.findAllByNameOrColorIgnoreCase(name, color).stream()
@@ -84,6 +99,9 @@ public final class FacultyService {
 
     }
 
+    /**
+     *   search faculty by student
+     */
     public FacultyReadDto findFacultyByStudent(Long id) {
         log.info("Был вызван метод: findFacultyByStudent");
         return Optional.of(facultyRepository.findByStudent_id(id))
@@ -91,11 +109,17 @@ public final class FacultyService {
                 .orElseThrow();
     }
 
+    /**
+     *   getting the last faculty id saved in the database
+     */
     public Long findLastID() {
         log.info("Был вызван метод: findLastID");
         return facultyRepository.findLastID();
     }
 
+    /**
+     *   search for the longest faculty name
+     */
     public Optional<String> findLongestFacultyName() {
         return facultyRepository.findAll().stream()
                 .map(Faculty::getName)

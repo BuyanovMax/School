@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.dto.FacultyCreateDto;
 import ru.hogwarts.school.dto.FacultyReadDto;
 import ru.hogwarts.school.exception.NotFoundException;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class FacultyController {
     @GetMapping("/getAllFacultyByColor/")
     public ResponseEntity<List<FacultyReadDto>> getAllFacultyByColor(String color) {
         if (color != null) {
-            return ResponseEntity.ok(facultyService.findAllByColor(color));
+            return ResponseEntity.ok(facultyService.findAllFacultyByColor(color));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

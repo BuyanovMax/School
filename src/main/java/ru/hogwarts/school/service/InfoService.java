@@ -17,11 +17,17 @@ public class InfoService implements InfoInterface {
         this.server = server;
     }
 
+    /**
+     *  getting port
+     */
     @Override
     public Integer getPort() {
         return server.getPort();
     }
 
+    /**
+     *  getting the sum of values in a fast way
+     */
     public Integer getValue() {
         long l = System.currentTimeMillis();
         int sum = 0;
