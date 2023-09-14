@@ -14,8 +14,11 @@ Educational project for the creation and storage of records for students and fac
    <li>Lombok</li>
    <li>Liquibase</li>
 </ul>
-
-
+  <p><strong>База данных</strong></p>
+<ul>
+   <li>PostgreSQL</li>
+</ul>
+  
  <body>
   <p><strong>Изменение убеждений</strong></p>
   <ul type="square">
