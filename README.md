@@ -1,5 +1,7 @@
-# School
-Educational project for the creation and storage of records for students and faculties
+<ul>
+   <li>docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5433:5432 -d postgres</li>
+</ul>
+
 <h1 align="center">Стек Технологий</h1>
   <p><strong>Язык и Окружение</strong></p>
 <ul>
