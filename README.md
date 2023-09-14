@@ -3,7 +3,14 @@ Educational project for the creation and storage of records for students and fac
 <h1 align="center">Стек Технологий</h1>
 
 <ul>
- <li>Первый пункт</li>
- <li>Второй пункт</li>
- <li>Третий пункт</li>
+ <li>Java 17</li>
+ <li>Maven</li>
+ <li>Spting Boot<li>
+ <li>Spring Web</li>
+ <li>Spring Data JPA</li>
+ <li>Rest<li>
+ <li>Git<li>
+ <li>Swagger<li>
+ <li>Lombok<li>
+ <li>Liquibase<li>
 </ul>
