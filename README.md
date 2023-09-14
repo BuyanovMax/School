@@ -1,5 +1,5 @@
 <ul>
-   <li>docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5433:5432 -d postgres</li>
+   <li>docker run --name postgres -e POSTGRES_PASSWORD=shadow -p 5433:5432 -d postgres</li>
 </ul>
 
 <h1 align="center">Стек Технологий</h1>
