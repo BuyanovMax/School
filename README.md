@@ -1,6 +1,7 @@
-<h1 align="left">Стек Технологий</h1>
-  <p><strong>Язык и Окружение</strong></p>
-git clone git@github.com:BuyanovMax/School.git
+<h1 align="left">Сборка и запуск проекта</h1>
+
+  <p><strong>git clone git@github.com:BuyanovMax/School.git</strong></p>
+
 
 
 
