@@ -1,7 +1,9 @@
 <h1 align="left">Сборка и запуск проекта</h1>
-
-  <p><strong>git clone git@github.com:BuyanovMax/School.git</strong></p>
-
+ <p><strong>1.Склонируйте проект</strong></p>
+ 
+<ul>
+   <li>git clone git@github.com:BuyanovMax/School.git</li>
+</ul>
 
 
 
