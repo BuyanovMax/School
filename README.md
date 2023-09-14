@@ -1,7 +1,8 @@
 # School
 Educational project for the creation and storage of records for students and faculties
 <h1 align="center">Стек Технологий</h1>
-
+<body>
+  <p><strong>Изменение убеждений</strong></p>
 <ul>
  <li>Язык и Окружение 17</li>
    <li>Java 17</li>
