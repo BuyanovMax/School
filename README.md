@@ -20,7 +20,8 @@ Educational project for the creation and storage of records for students and fac
 </ul>
 <p><strong>Тестирование</strong></p>
 <ul>
-   <li>PostgreSQL</li>
+   <li>JUnit</li>
+  <li>Mockito</li>
 </ul>
 <p><strong>Прочее</strong></p>
 <ul>
