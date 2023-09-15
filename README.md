@@ -8,7 +8,7 @@
 </ul>
 <p><strong>2 . Разверните Docker контейнер:</strong></p>
 <ul>
-   <li>docker run --name postgres -e POSTGRES_PASSWORD=shadow -p 5433:5432 -d postgres</li>
+   <li>docker run --name postgres -e POSTGRES_PASSWORD=[password] -p 5433:5432 -d postgres</li>
 </ul>
 
 <h1 align="left">Стек Технологий:</h1>
